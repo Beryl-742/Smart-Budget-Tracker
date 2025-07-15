@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Budget Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Smart Budget Tracker</h1>
+  </header>
+
+  <section id="dashboard">
+    <h2>Dashboard</h2>
+    <div class="summary">
+      <div>Total Income: <span id="total-income">0</span></div>
+      <div>Total Expenses: <span id="total-expenses">0</span></div>
+      <div>Locked Savings: <span id="total-savings">0</span></div>
+      <div>Available Balance: <span id="available-balance">0</span></div>
+    </div>
+  </section>
+
+  <section id="forms">
+    <div class="form-container">
+      <h3>Add Income</h3>
+      <input type="text" id="income-source" placeholder="Source" />
+      <input type="number" id="income-amount" placeholder="Amount" />
+      <button id="add-income">Add Income</button>
+    </div>
+
+    <div class="form-container">
+      <h3>Add Expense</h3>
+      <input type="text" id="expense-category" placeholder="Category" />
+      <input type="number" id="expense-amount" placeholder="Amount" />
+      <button id="add-expense">Add Expense</button>
+    </div>
+
+    <div class="form-container">
+      <h3>Add Savings Goal</h3>
+      <input type="text" id="savings-goal" placeholder="Goal Name" />
+      <input type="number" id="savings-amount" placeholder="Amount" />
+      <button id="add-savings">Add Savings</button>
+    </div>
+  </section>
+
+  <section id="lists">
+    <div>
+      <h3>Income List</h3>
+      <ul id="income-list"></ul>
+    </div>
+    <div>
+      <h3>Expense List</h3>
+      <ul id="expense-list"></ul>
+    </div>
+    <div>
+      <h3>Savings Goals</h3>
+      <ul id="savings-list"></ul>
+    </div>
+  </section>
+
+  <script src="index.js"></script>
+</body>
+</html>
