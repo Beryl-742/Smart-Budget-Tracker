@@ -24,25 +24,27 @@
 
   <section id="forms">
     <div class="form-container">
-      <h3>Add Income</h3>
+      <h3>Add Monthly Income</h3>
       <input type="text" id="income-source" placeholder="Source" />
       <input type="number" id="income-amount" placeholder="Amount" />
       <button id="add-income">Add Income</button>
     </div>
 
     <div class="form-container">
-      <h3>Add Expense</h3>
+      <h3>Add Monthly Expense</h3>
       <input type="text" id="expense-category" placeholder="Category" />
       <input type="number" id="expense-amount" placeholder="Amount" />
       <button id="add-expense">Add Expense</button>
     </div>
 
-    <div class="form-container">
-      <h3>Add Savings Goal</h3>
-      <input type="text" id="savings-goal" placeholder="Goal Name" />
-      <input type="number" id="savings-amount" placeholder="Amount" />
-      <button id="add-savings">Add Savings</button>
-    </div>
+    <div class="form-section">
+     <h3>Add Savings</h3>
+     <input type="text" id="savings-goal" placeholder="Savings Goal (e.g., Vacation)">
+     <input type="number" id="savings-amount" placeholder="Amount to Save Now">
+     <input type="number" id="savings-target" placeholder="Target Amount (e.g., 20000)">
+     <input type="number" id="savings-duration" placeholder="Duration (months)">
+    <button id="add-savings">Add Savings</button>
+   </div>
   </section>
 
   <section id="lists">
@@ -55,8 +57,12 @@
       <ul id="expense-list"></ul>
     </div>
     <div>
-      <h3>Savings Goals</h3>
-      <ul id="savings-list"></ul>
+      <h3>Target Savings</h3>
+     <input type="text" id="savings-goal" placeholder="Savings Goal (e.g., Vacation)">
+     <input type="number" id="savings-amount" placeholder="Amount to Save Now">
+     <input type="number" id="savings-target" placeholder="Target Amount (e.g., 20000)">
+     <input type="number" id="savings-duration" placeholder="Duration (months)">
+     <button id="add-savings">Add Savings</button>
     </div>
   </section>
 

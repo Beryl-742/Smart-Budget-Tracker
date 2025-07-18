@@ -1,0 +1,23 @@
+{
+  "income": [
+    {
+      "id": 1,
+      "source": "Salary",
+      "amount": 50000
+    }
+  ],
+  "expenses": [
+    {
+      "id": 1,
+      "category": "Rent",
+      "amount": 15000
+    }
+  ],
+  "savings": [
+    {
+      "id": 1,
+      "goal": "Emergency Fund",
+      "amount": 10000
+    }
+  ]
+}
