@@ -24,21 +24,40 @@ const totalExpensesEl = document.getElementById('total-expenses');
 const totalSavingsEl = document.getElementById('total-savings');
 
 // ==== Event Listeners ====
-incomeForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const amount = parseFloat(incomeInput.value);
-  if (!isNaN(amount) && amount > 0) {
-    addIncome(amount);
-    incomeInput.value = '';
+document.getElementById("add-income").addEventListener("click", () => {
+  const source = document.getElementById("income-source").value;
+  const amount = parseFloat(document.getElementById("income-amount").value);
+
+  if (source && !isNaN(amount) && amount > 0) {
+    addIncome(amount, source);
+    document.getElementById("income-source").value = "";
+    document.getElementById("income-amount").value = "";
   }
 });
 
-expenseForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const amount = parseFloat(expenseInput.value);
-  if (!isNaN(amount) && amount > 0) {
-    addExpense(amount);
-    expenseInput.value = '';
+document.getElementById("add-expense").addEventListener("click", () => {
+  const category = document.getElementById("expense-category").value;
+  const amount = parseFloat(document.getElementById("expense-amount").value);
+
+  if (category && !isNaN(amount) && amount > 0) {
+    addExpense(amount, category);
+    document.getElementById("expense-category").value = "";
+    document.getElementById("expense-amount").value = "";
+  }
+});
+
+document.getElementById("add-savings").addEventListener("click", () => {
+  const title = document.getElementById("savings-goal").value;
+  const amount = parseFloat(document.getElementById("savings-amount").value);
+  const target = parseFloat(document.getElementById("savings-target").value);
+  const duration = document.getElementById("savings-duration").value;
+
+  if (title && !isNaN(amount) && amount > 0 && !isNaN(target) && target > 0 && duration) {
+    addSavings(title, amount, target, duration);
+    document.getElementById("savings-goal").value = "";
+    document.getElementById("savings-amount").value = "";
+    document.getElementById("savings-target").value = "";
+    document.getElementById("savings-duration").value = "";
   }
 });
 
