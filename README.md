@@ -7,3 +7,21 @@ This app is built with HTML, CSS, and JavaScript, and stores data temporarily in
 Live Demo
 https://smart-budget-tracker.onrender.com
 
+Features
+Add and Track monthly income with source and date
+Add and track expenses with category
+View total income, expenses, savings and available balance
+Visual Progress bars for savings goals
+Delete entries dynamically
+Simple, responsive UI
+
+Technologies
+HTML
+CSS3
+JavaScript
+
+License
+This project is open source and available under the MIT License.
+
+Author
+Beryl Owino - @Beryl-742
