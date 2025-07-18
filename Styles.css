@@ -115,3 +115,33 @@ li .progress-bar {
   margin: 6px 0;
   font-weight: bold;
 }
+.entry-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.entry-table th,
+.entry-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.entry-table th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.entry-table td button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.entry-table td button:hover {
+  background-color: #b02a37;
+}
