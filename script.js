@@ -4,26 +4,19 @@ let totalIncome = 0;
 let totalExpenses = 0;
 let savingsList = [];
 
-const incomeForm = document.getElementById('income-form');
-const expenseForm = document.getElementById('expense-form');
-const savingsForm = document.getElementById('savings-form');
-
-const incomeInput = document.getElementById('income-input');
-const expenseInput = document.getElementById('expense-input');
-const savingsTitleInput = document.getElementById('savings-title-input');
-const savingsAmountInput = document.getElementById('savings-amount-input');
-const savingsTargetInput = document.getElementById('savings-target-input');
-const savingsDurationInput = document.getElementById('savings-duration-input');
-
-const incomeList = document.getElementById('income-list');
-const expenseList = document.getElementById('expense-list');
-const savingsListEl = document.getElementById('savings-list');
-
+// DOM elements
 const totalIncomeEl = document.getElementById('total-income');
 const totalExpensesEl = document.getElementById('total-expenses');
 const totalSavingsEl = document.getElementById('total-savings');
+const availableBalanceEl = document.getElementById('available-balance');
 
-// ==== Event Listeners ====
+const incomeListEl = document.getElementById('income-list');
+const expenseListEl = document.getElementById('expense-list');
+const savingsListEl = document.getElementById('savings-list');
+
+// === Event Listeners ===
+
+// Add Income
 document.getElementById("add-income").addEventListener("click", () => {
   const source = document.getElementById("income-source").value;
   const amount = parseFloat(document.getElementById("income-amount").value);
@@ -35,6 +28,7 @@ document.getElementById("add-income").addEventListener("click", () => {
   }
 });
 
+// Add Expense
 document.getElementById("add-expense").addEventListener("click", () => {
   const category = document.getElementById("expense-category").value;
   const amount = parseFloat(document.getElementById("expense-amount").value);
@@ -46,6 +40,7 @@ document.getElementById("add-expense").addEventListener("click", () => {
   }
 });
 
+// Add Savings
 document.getElementById("add-savings").addEventListener("click", () => {
   const title = document.getElementById("savings-goal").value;
   const amount = parseFloat(document.getElementById("savings-amount").value);
@@ -61,43 +56,22 @@ document.getElementById("add-savings").addEventListener("click", () => {
   }
 });
 
-savingsForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const title = savingsTitleInput.value;
-  const amount = parseFloat(savingsAmountInput.value);
-  const target = parseFloat(savingsTargetInput.value);
-  const duration = savingsDurationInput.value;
+// === Logic Functions ===
 
-  if (title && !isNaN(amount) && amount > 0 && !isNaN(target) && target > 0 && duration) {
-    addSavings(title, amount, target, duration);
-    savingsTitleInput.value = '';
-    savingsAmountInput.value = '';
-    savingsTargetInput.value = '';
-    savingsDurationInput.value = '';
-  }
-});
-
-// ==== Functions ====
-
-function addIncome(amount) {
+function addIncome(amount, description) {
   totalIncome += amount;
   updateTotals();
-  renderIncome(amount);
+  renderIncomeEntry({ amount, description });
 }
 
-function addExpense(amount) {
+function addExpense(amount, description) {
   totalExpenses += amount;
   updateTotals();
-  renderExpense(amount);
+  renderExpenseEntry({ amount, description });
 }
 
 function addSavings(title, amount, target, duration) {
-  const savings = {
-    title,
-    amount,
-    target,
-    duration
-  };
+  const savings = { title, amount, target, duration };
   savingsList.push(savings);
   updateTotals();
   renderSavingsItem(savings);
@@ -105,47 +79,68 @@ function addSavings(title, amount, target, duration) {
 
 function updateTotals() {
   const totalSavings = savingsList.reduce((sum, item) => sum + item.amount, 0);
+  const availableBalance = totalIncome - totalExpenses - totalSavings;
+
   totalIncomeEl.textContent = totalIncome.toFixed(2);
   totalExpensesEl.textContent = totalExpenses.toFixed(2);
   totalSavingsEl.textContent = totalSavings.toFixed(2);
+  availableBalanceEl.textContent = availableBalance.toFixed(2);
+
+  // Alerts
+  if (totalExpenses > totalIncome) {
+    totalExpensesEl.style.color = 'red';
+  } else {
+    totalExpensesEl.style.color = '';
+  }
+
+  savingsList.forEach((savings, index) => {
+    const progress = (savings.amount / savings.target) * 100;
+    const li = savingsListEl.children[index];
+    if (li) {
+      const bar = li.querySelector('.progress-bar');
+      const status = li.querySelector('.status');
+      bar.style.backgroundColor = progress >= 100 ? 'green' : '#28a745';
+      status.style.color = progress >= 100 ? 'green' : 'black';
+    }
+  });
 }
 
-// Function to render income entry in table
-function renderIncomeEntry(income) {
+// === Render Functions ===
+
+function renderIncomeEntry(entry) {
   const row = document.createElement("tr");
 
   row.innerHTML = `
-    <td>KES ${income.amount}</td>
-    <td>${income.description}</td>
+    <td>KES ${entry.amount.toFixed(2)}</td>
+    <td>${entry.description}</td>
     <td><button class="delete-btn">Delete</button></td>
   `;
 
   row.querySelector(".delete-btn").addEventListener("click", () => {
-    incomeList = incomeList.filter((item) => item !== income);
+    totalIncome -= entry.amount;
     updateTotals();
     row.remove();
   });
 
-  document.getElementById("income-list").appendChild(row);
+  incomeListEl.appendChild(row);
 }
 
-// Function to render expense entry in table
-function renderExpenseEntry(expense) {
+function renderExpenseEntry(entry) {
   const row = document.createElement("tr");
 
   row.innerHTML = `
-    <td>KES ${expense.amount}</td>
-    <td>${expense.description}</td>
+    <td>KES ${entry.amount.toFixed(2)}</td>
+    <td>${entry.description}</td>
     <td><button class="delete-btn">Delete</button></td>
   `;
 
   row.querySelector(".delete-btn").addEventListener("click", () => {
-    expenseList = expenseList.filter((item) => item !== expense);
+    totalExpenses -= entry.amount;
     updateTotals();
     row.remove();
   });
 
-  document.getElementById("expense-list").appendChild(row);
+  expenseListEl.appendChild(row);
 }
 
 function renderSavingsItem(savings) {
@@ -154,11 +149,11 @@ function renderSavingsItem(savings) {
   const percentage = Math.min((savings.amount / savings.target) * 100, 100).toFixed(1);
 
   li.innerHTML = `
-    <strong>${savings.title}</strong>
-    <span>Ksh ${savings.amount.toFixed(2)} saved of Ksh ${savings.target.toFixed(2)}</span>
-    <span>Duration: ${savings.duration}</span>
-    <div class="progress-bar-container">
-      <div class="progress-bar" style="width: ${percentage}%; background-color: ${percentage == 100 ? '#00c851' : '#28a745'};"></div>
+    <strong>${savings.title}</strong><br>
+    <span>Ksh ${savings.amount.toFixed(2)} saved of Ksh ${savings.target.toFixed(2)}</span><br>
+    <span>Duration: ${savings.duration} months</span>
+    <div class="progress-bar-container" style="background: #eee; height: 20px; width: 100%; margin-top: 5px;">
+      <div class="progress-bar" style="height: 100%; width: ${percentage}%; background-color: ${percentage == 100 ? 'green' : '#28a745'};"></div>
     </div>
     <div class="status">${percentage}% ${percentage == 100 ? '🎉 Goal reached!' : 'in progress'}</div>
   `;
