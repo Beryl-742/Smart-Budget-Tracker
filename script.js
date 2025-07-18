@@ -1,170 +1,148 @@
 // script.js
+// ==== State ====
+let totalIncome = 0;
+let totalExpenses = 0;
+let savingsList = [];
 
-document.addEventListener('DOMContentLoaded', () => {
-  const incomeList = document.getElementById('income-list');
-  const expenseList = document.getElementById('expense-list');
-  const savingsList = document.getElementById('savings-list');
+const incomeForm = document.getElementById('income-form');
+const expenseForm = document.getElementById('expense-form');
+const savingsForm = document.getElementById('savings-form');
 
-  const totalIncomeEl = document.getElementById('total-income');
-  const totalExpensesEl = document.getElementById('total-expenses');
-  const totalSavingsEl = document.getElementById('total-savings');
-  const availableBalanceEl = document.getElementById('available-balance');
+const incomeInput = document.getElementById('income-input');
+const expenseInput = document.getElementById('expense-input');
+const savingsTitleInput = document.getElementById('savings-title-input');
+const savingsAmountInput = document.getElementById('savings-amount-input');
+const savingsTargetInput = document.getElementById('savings-target-input');
+const savingsDurationInput = document.getElementById('savings-duration-input');
 
-  const BASE_URL = 'http://localhost:3000'; // Base URL for JSON Server
+const incomeList = document.getElementById('income-list');
+const expenseList = document.getElementById('expense-list');
+const savingsListEl = document.getElementById('savings-list');
 
-  // Function to fetch and update totals and lists from the server
-  const updateTotals = async () => {
-    const [incomeData, expenseData, savingsData] = await Promise.all([
-      fetch(`${BASE_URL}/income`).then(res => res.json()),
-      fetch(`${BASE_URL}/expenses`).then(res => res.json()),
-      fetch(`${BASE_URL}/savings`).then(res => res.json())
-    ]);
+const totalIncomeEl = document.getElementById('total-income');
+const totalExpensesEl = document.getElementById('total-expenses');
+const totalSavingsEl = document.getElementById('total-savings');
 
-    const totalIncome = incomeData.reduce((sum, i) => sum + i.amount, 0);
-    const totalExpenses = expenseData.reduce((sum, e) => sum + e.amount, 0);
-    const totalSavings = savingsData.reduce((sum, s) => sum + s.amount, 0);
-    const availableBalance = totalIncome - totalExpenses - totalSavings;
-
-    totalIncomeEl.textContent = totalIncome;
-    totalExpensesEl.textContent = totalExpenses;
-    totalSavingsEl.textContent = totalSavings;
-    availableBalanceEl.textContent = availableBalance;
-
-    renderList(incomeData, incomeList, 'income', i => `${i.source}: KES ${i.amount}`);
-    renderList(expenseData, expenseList, 'expenses', e => `${e.category}: KES ${e.amount}`);
-    renderList(savingsData, savingsList, 'savings', s => {
-      const monthlyTarget = s.duration ? (s.targetAmount / s.duration).toFixed(2) : 'N/A';
-      return `${s.goal}: Saved KES ${s.amount} / Target KES ${s.targetAmount || 'N/A'} in ${s.duration || 'N/A'} months (KES ${monthlyTarget}/mo)`;
-    }, true);
-  };
-
-  // Render list with edit, delete, and optional lock buttons
-  const renderList = (items, container, type, formatter, isLockable = false) => {
-    container.innerHTML = '';
-    items.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = formatter(item);
-
-      // Lock button for savings
-      if (isLockable) {
-        const lockBtn = document.createElement('button');
-        lockBtn.textContent = item.isLocked ? '🔒 Locked' : '🔓 Lock';
-        lockBtn.style.marginLeft = '10px';
-        lockBtn.style.backgroundColor = '#6c757d';
-        lockBtn.style.color = 'white';
-        lockBtn.style.border = 'none';
-        lockBtn.style.padding = '4px 8px';
-        lockBtn.style.borderRadius = '4px';
-        lockBtn.style.cursor = 'pointer';
-
-        lockBtn.addEventListener('click', () => {
-          const updatedItem = { ...item, isLocked: !item.isLocked };
-          fetch(`${BASE_URL}/${type}/${item.id}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedItem)
-          }).then(() => updateTotals());
-        });
-
-        li.appendChild(lockBtn);
-        if (item.isLocked) {
-          li.style.opacity = '0.6';
-        }
-      }
-
-      // Create edit button
-      const editBtn = document.createElement('button');
-      editBtn.textContent = 'Edit';
-      editBtn.style.marginLeft = '10px';
-      editBtn.style.backgroundColor = '#ffc107';
-      editBtn.style.color = 'black';
-      editBtn.style.border = 'none';
-      editBtn.style.padding = '4px 8px';
-      editBtn.style.borderRadius = '4px';
-      editBtn.style.cursor = 'pointer';
-
-      editBtn.addEventListener('click', () => {
-        if (item.isLocked) return alert('This entry is locked and cannot be edited.');
-        const newValue = prompt('Enter new amount:');
-        const newAmount = parseFloat(newValue);
-        if (!isNaN(newAmount)) {
-          const updatedItem = { ...item, amount: newAmount };
-          fetch(`${BASE_URL}/${type}/${item.id}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedItem)
-          }).then(() => updateTotals());
-        }
-      });
-
-      // Create delete button
-      const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = 'Delete';
-      deleteBtn.style.marginLeft = '10px';
-      deleteBtn.style.backgroundColor = '#dc3545';
-      deleteBtn.style.color = 'white';
-      deleteBtn.style.border = 'none';
-      deleteBtn.style.padding = '4px 8px';
-      deleteBtn.style.borderRadius = '4px';
-      deleteBtn.style.cursor = 'pointer';
-
-      deleteBtn.addEventListener('click', () => {
-        if (item.isLocked) return alert('This entry is locked and cannot be deleted.');
-        fetch(`${BASE_URL}/${type}/${item.id}`, {
-          method: 'DELETE'
-        }).then(() => updateTotals());
-      });
-
-      li.appendChild(editBtn);
-      li.appendChild(deleteBtn);
-      container.appendChild(li);
-    });
-  };
-
-  // Handle Add Income button click
-  document.getElementById('add-income').addEventListener('click', () => {
-    const source = document.getElementById('income-source').value;
-    const amount = parseFloat(document.getElementById('income-amount').value);
-    if (source && !isNaN(amount)) {
-      fetch(`${BASE_URL}/income`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ source, amount })
-      })
-      .then(() => updateTotals());
-    }
-  });
-
-  // Handle Add Expense button click
-  document.getElementById('add-expense').addEventListener('click', () => {
-    const category = document.getElementById('expense-category').value;
-    const amount = parseFloat(document.getElementById('expense-amount').value);
-    if (category && !isNaN(amount)) {
-      fetch(`${BASE_URL}/expenses`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category, amount })
-      })
-      .then(() => updateTotals());
-    }
-  });
-
-  // Handle Add Savings button click
-  document.getElementById('add-savings').addEventListener('click', () => {
-    const goal = document.getElementById('savings-goal').value;
-    const amount = parseFloat(document.getElementById('savings-amount').value);
-    const targetAmount = parseFloat(document.getElementById('savings-target').value);
-    const duration = parseInt(document.getElementById('savings-duration').value);
-
-    if (goal && !isNaN(amount) && !isNaN(targetAmount) && !isNaN(duration)) {
-      fetch(`${BASE_URL}/savings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ goal, amount, targetAmount, duration, isLocked: false })
-      })
-      .then(() => updateTotals());
-    }
-  });
-
-  updateTotals();
+// ==== Event Listeners ====
+incomeForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const amount = parseFloat(incomeInput.value);
+  if (!isNaN(amount) && amount > 0) {
+    addIncome(amount);
+    incomeInput.value = '';
+  }
 });
+
+expenseForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const amount = parseFloat(expenseInput.value);
+  if (!isNaN(amount) && amount > 0) {
+    addExpense(amount);
+    expenseInput.value = '';
+  }
+});
+
+savingsForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const title = savingsTitleInput.value;
+  const amount = parseFloat(savingsAmountInput.value);
+  const target = parseFloat(savingsTargetInput.value);
+  const duration = savingsDurationInput.value;
+
+  if (title && !isNaN(amount) && amount > 0 && !isNaN(target) && target > 0 && duration) {
+    addSavings(title, amount, target, duration);
+    savingsTitleInput.value = '';
+    savingsAmountInput.value = '';
+    savingsTargetInput.value = '';
+    savingsDurationInput.value = '';
+  }
+});
+
+// ==== Functions ====
+
+function addIncome(amount) {
+  totalIncome += amount;
+  updateTotals();
+  renderIncome(amount);
+}
+
+function addExpense(amount) {
+  totalExpenses += amount;
+  updateTotals();
+  renderExpense(amount);
+}
+
+function addSavings(title, amount, target, duration) {
+  const savings = {
+    title,
+    amount,
+    target,
+    duration
+  };
+  savingsList.push(savings);
+  updateTotals();
+  renderSavingsItem(savings);
+}
+
+function updateTotals() {
+  const totalSavings = savingsList.reduce((sum, item) => sum + item.amount, 0);
+  totalIncomeEl.textContent = totalIncome.toFixed(2);
+  totalExpensesEl.textContent = totalExpenses.toFixed(2);
+  totalSavingsEl.textContent = totalSavings.toFixed(2);
+}
+
+// Function to render income entry in table
+function renderIncomeEntry(income) {
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td>KES ${income.amount}</td>
+    <td>${income.description}</td>
+    <td><button class="delete-btn">Delete</button></td>
+  `;
+
+  row.querySelector(".delete-btn").addEventListener("click", () => {
+    incomeList = incomeList.filter((item) => item !== income);
+    updateTotals();
+    row.remove();
+  });
+
+  document.getElementById("income-list").appendChild(row);
+}
+
+// Function to render expense entry in table
+function renderExpenseEntry(expense) {
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td>KES ${expense.amount}</td>
+    <td>${expense.description}</td>
+    <td><button class="delete-btn">Delete</button></td>
+  `;
+
+  row.querySelector(".delete-btn").addEventListener("click", () => {
+    expenseList = expenseList.filter((item) => item !== expense);
+    updateTotals();
+    row.remove();
+  });
+
+  document.getElementById("expense-list").appendChild(row);
+}
+
+function renderSavingsItem(savings) {
+  const li = document.createElement('li');
+
+  const percentage = Math.min((savings.amount / savings.target) * 100, 100).toFixed(1);
+
+  li.innerHTML = `
+    <strong>${savings.title}</strong>
+    <span>Ksh ${savings.amount.toFixed(2)} saved of Ksh ${savings.target.toFixed(2)}</span>
+    <span>Duration: ${savings.duration}</span>
+    <div class="progress-bar-container">
+      <div class="progress-bar" style="width: ${percentage}%; background-color: ${percentage == 100 ? '#00c851' : '#28a745'};"></div>
+    </div>
+    <div class="status">${percentage}% ${percentage == 100 ? '🎉 Goal reached!' : 'in progress'}</div>
+  `;
+
+  savingsListEl.appendChild(li);
+}
