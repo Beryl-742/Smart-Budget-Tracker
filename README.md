@@ -6,3 +6,4 @@ This app is built with HTML, CSS, and JavaScript, and stores data temporarily in
 
 Live Demo
 https://smart-budget-tracker.onrender.com
+
