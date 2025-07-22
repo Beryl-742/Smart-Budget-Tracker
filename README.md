@@ -7,6 +7,9 @@ This app is built with HTML, CSS, and JavaScript, and stores data temporarily in
 ## Live Demo
 https://smart-budget-tracker.onrender.com
 
+## GitHub Live link
+https://beryl-742.github.io/Smart-Budget-Tracker
+
 ## Features
 Add and Track monthly income with source and date
 Add and track expenses with category
