@@ -7,6 +7,7 @@ body {
   background-image: url('https://www.transparenttextures.com/patterns/diamond-upholstery.png');
 }
 
+/* Headings and icons */
 h1, h2, h3 {
   color: #333333c4;
   display: flex;
@@ -14,40 +15,8 @@ h1, h2, h3 {
   gap: 10px;
 }
 
-#advice-box, .advice-box {
-  background-color: #fff9e6;
-  border-left: 5px solid #ffcc00;
-  padding: 15px 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-  font-style: italic;
-  color: #555;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-#advice-box h3, .advice-box h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  color: #b58900;
-}
 
-h2::before {
-  content: url('https://cdn-icons-png.flaticon.com/512/3135/3135715.png'); /* income icon */
-  height: 24px;
-  width: 24px;
-}
-
-h3:nth-of-type(1)::before {
-  content: url('https://cdn-icons-png.flaticon.com/512/337/337946.png'); /* expense icon */
-  height: 24px;
-  width: 24px;
-}
-
-h3:nth-of-type(2)::before {
-  content: url('https://cdn-icons-png.flaticon.com/512/1828/1828919.png'); /* savings icon */
-  height: 24px;
-  width: 24px;
-}
-
+/* Layout container */
 .container {
   max-width: 800px;
   margin: 0 auto;
@@ -57,12 +26,14 @@ h3:nth-of-type(2)::before {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Section form styling */
 .form-section {
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }
 
+/* Inputs and buttons */
 input, button {
   padding: 10px;
   margin: 5px 0;
@@ -84,6 +55,7 @@ button:hover {
   background-color: #0056b3;
 }
 
+/* Savings list styling */
 ul {
   list-style-type: none;
   padding: 0;
@@ -99,6 +71,7 @@ li {
   flex-direction: column;
 }
 
+/* Progress bar for savings */
 li .progress-bar-container {
   background-color: #e0e0e0;
   height: 12px;
@@ -119,6 +92,7 @@ li .progress-bar {
   margin-top: 6px;
 }
 
+/* Totals section */
 .totals {
   margin-top: 20px;
   padding: 15px;
@@ -131,6 +105,8 @@ li .progress-bar {
   margin: 6px 0;
   font-weight: bold;
 }
+
+/* Tables for income and expenses */
 .entry-table {
   width: 100%;
   border-collapse: collapse;
@@ -160,4 +136,12 @@ li .progress-bar {
 
 .entry-table td button:hover {
   background-color: #b02a37;
+}
+
+
+/* Responsive image fix (if any image sneaks in) */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
