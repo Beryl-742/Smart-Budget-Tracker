@@ -10,6 +10,10 @@ https://smart-budget-tracker.onrender.com
 ## GitHub Live link
 https://beryl-742.github.io/Smart-Budget-Tracker
 
+## API Integration
+
+This app uses the [Quotable API](https://api.quotable.io/random) to fetch a random motivational quote each time the page loads.
+
 ## Features
 Add and Track monthly income with source and date
 Add and track expenses with category
