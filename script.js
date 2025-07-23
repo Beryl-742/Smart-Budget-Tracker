@@ -147,17 +147,16 @@ function updateTotals() {
   totalSavingsEl.textContent = totalSavings.toFixed(2);
   availableBalanceEl.textContent = (totalIncome - totalExpenses - totalSavings).toFixed(2);
 }
-function fetchDailyQuote() {
+function fetchDailyAdvice() {
   fetch('https://api.adviceslip.com/advice')
     .then(response => response.json())
     .then(data => {
-      document.getElementById('quote-text').textContent = `"${data.content}" — ${data.author}`;
+      document.getElementById('quote-text').textContent = `"${data.slip.advice}"`;
     })
     .catch(error => {
-      console.error('Error fetching quote:', error);
-      document.getElementById('quote-text').textContent = "Could not load quote. Try again later.";
+      console.error('Error fetching advice:', error);
+      document.getElementById('quote-text').textContent = "Could not load advice. Try again later.";
     });
 }
 
-// Fetch when page loads
-document.addEventListener("DOMContentLoaded", fetchDailyQuote);
+document.addEventListener("DOMContentLoaded", fetchDailyAdvice);

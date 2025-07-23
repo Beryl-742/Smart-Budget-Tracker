@@ -12,7 +12,7 @@ https://beryl-742.github.io/Smart-Budget-Tracker
 
 ## API Integration
 
-This app uses the [Quotable API](https://api.quotable.io/random) to fetch a random motivational quote each time the page loads.
+This app uses the [Quotable API](https://api.adviceslip.com/advice) to fetch a random motivational quote each time the page loads.
 
 ## Features
 Add and Track monthly income with source and date
