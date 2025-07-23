@@ -148,7 +148,7 @@ function updateTotals() {
   availableBalanceEl.textContent = (totalIncome - totalExpenses - totalSavings).toFixed(2);
 }
 function fetchDailyQuote() {
-  fetch('https://api.quotable.io/random')
+  fetch('https://api.adviceslip.com/advice')
     .then(response => response.json())
     .then(data => {
       document.getElementById('quote-text').textContent = `"${data.content}" — ${data.author}`;
