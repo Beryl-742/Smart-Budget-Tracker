@@ -147,3 +147,17 @@ function updateTotals() {
   totalSavingsEl.textContent = totalSavings.toFixed(2);
   availableBalanceEl.textContent = (totalIncome - totalExpenses - totalSavings).toFixed(2);
 }
+function fetchDailyQuote() {
+  fetch('https://api.quotable.io/random')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('quote-text').textContent = `"${data.content}" — ${data.author}`;
+    })
+    .catch(error => {
+      console.error('Error fetching quote:', error);
+      document.getElementById('quote-text').textContent = "Could not load quote. Try again later.";
+    });
+}
+
+// Fetch when page loads
+document.addEventListener("DOMContentLoaded", fetchDailyQuote);
